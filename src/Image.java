@@ -66,10 +66,4 @@ public class Image {
 	    }
 	}
 	
-	public static void main(String[] args) {
-		Image soupCan = new Image("flowers.jpeg");
-		int[][] dither = soupCan.dither();
-		writeImage("pretty", dither);
-		
-	}
 }
