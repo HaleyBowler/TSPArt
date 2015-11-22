@@ -32,9 +32,6 @@ public class TSP {
 			blackPoints.remove(shortestDist);
 			
 		}
-		while(!path.isEmpty()) {
-			System.out.println(path.pop());
-		}
 		return path;
 	}
 	
