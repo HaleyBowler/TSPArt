@@ -1,7 +1,10 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 public class Image {
@@ -9,33 +12,55 @@ public class Image {
 
 	public Image(String filename) {
 		try {
-			img = ImageIO.read(new File(filename));
+			BufferedImage orginalImage = ImageIO.read(new File(filename));
+			/*
+			BufferedImage blackAndWhiteImg = new BufferedImage(
+			        orginalImage.getWidth(), orginalImage.getHeight(),
+			        BufferedImage.TYPE_BYTE_GRAY);
+			    
+			    Graphics2D graphics = blackAndWhiteImg.createGraphics();
+			    graphics.drawImage(orginalImage, 0, 0, null);
+
+			    ImageIO.write(blackAndWhiteImg, "png", new File("blackandwhite.png")); 
+			    img = ImageIO.read(new File("blackandwhite.png"));
+			    */
+			img = orginalImage;
 
 		} catch (IOException e) {
 		}
 	}
 	
+	
 	public int[][] dither() {
 		int[][] pixel = new int[img.getHeight()][img.getWidth()];
 		for (int i = 0; i < pixel.length; i++) {
 			for (int j = 0; j < pixel[i].length; j++) {
-				pixel[i][j] = img.getRGB(j, i);
+				Color color = new Color(img.getRGB(j, i));
+				//pixel[i][j] = img.getRGB(j, i);
+				/*pixel[i][j] = (thecolor.getRed() + thecolor.getBlue() + thecolor
+						.getGreen()) / 3;*/
+				pixel[i][j] = (int)(color.getGreen()*.7+color.getRed()*.2+color.getBlue()*.1);
+			
 			}
 		}
 		for (int i = 0; i < pixel.length; i++) {
 			for (int j = 0; j < pixel[i].length; j++) {
 				int oldPixel = pixel[i][j];
-				int newPixel = oldPixel/256;
+				int newPixel = 255;
+				if (oldPixel < 128){
+					newPixel=0;
+				}
+				//int newPixel = oldPixel/256;
 				pixel[i][j] = newPixel;
 				int error = oldPixel - newPixel;
 				if(i < pixel.length - 1)
-					pixel[i+1][j] = pixel[i+1][j] + (error * (7/16));
+					pixel[i+1][j] = pixel[i+1][j] + (int)(error * (7.0/16));
 				if(j < pixel[i].length - 1 && i > 1)
-					pixel[i-1][j+1] = pixel[i-1][j+1] + (error * (3/16));
+					pixel[i-1][j+1] = pixel[i-1][j+1] + (int)(error * (3.0/16));
 				if(j < pixel[i].length - 1)
-					pixel[i][j+1] = pixel[i][j+1] + (error * (5/16));
+					pixel[i][j+1] = pixel[i][j+1] + (int)(error * (5.0/16));
 				if(j < pixel[i].length - 1 && i < pixel.length - 1)
-				pixel[i+1][j+1] = pixel[i+1][j+1] + (error * (1/16));
+				pixel[i+1][j+1] = pixel[i+1][j+1] + (int)(error * (1.0/16));
 			}
 		}
 		return pixel;
@@ -65,5 +90,5 @@ public class Image {
 	        e.printStackTrace();
 	    }
 	}
-	
+
 }
