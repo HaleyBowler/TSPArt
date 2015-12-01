@@ -13,6 +13,7 @@ public class Image {
 	public Image(String filename) {
 		try {
 			BufferedImage orginalImage = ImageIO.read(new File(filename));
+			img = (BufferedImage) orginalImage.getScaledInstance(500, 500, 0);
 			/*
 			BufferedImage blackAndWhiteImg = new BufferedImage(
 			        orginalImage.getWidth(), orginalImage.getHeight(),
@@ -24,7 +25,6 @@ public class Image {
 			    ImageIO.write(blackAndWhiteImg, "png", new File("blackandwhite.png")); 
 			    img = ImageIO.read(new File("blackandwhite.png"));
 			    */
-			img = orginalImage;
 
 		} catch (IOException e) {
 		}
