@@ -9,11 +9,16 @@ import javax.imageio.ImageIO;
 
 public class Image {
 	public BufferedImage img;
+	public double[][] threshhold = {{1/17, 9/17, 3/17, 1/17},
+			             {13/17, 5/17, 15/17, 7/17},
+			             {4/17, 12/17, 2/17, 10/17},
+			             {16/17, 8/17, 14/17, 6/17}};
+	
 
 	public Image(String filename) {
 		try {
-			BufferedImage orginalImage = ImageIO.read(new File(filename));
-			img = (BufferedImage) orginalImage.getScaledInstance(500, 500, 0);
+			img = ImageIO.read(new File(filename));
+			//img = (BufferedImage) orginalImage.getScaledInstance(500, 500, 0);
 			/*
 			BufferedImage blackAndWhiteImg = new BufferedImage(
 			        orginalImage.getWidth(), orginalImage.getHeight(),
@@ -30,16 +35,13 @@ public class Image {
 		}
 	}
 	
-	
 	public int[][] dither() {
 		int[][] pixel = new int[img.getHeight()][img.getWidth()];
 		for (int i = 0; i < pixel.length; i++) {
 			for (int j = 0; j < pixel[i].length; j++) {
 				Color color = new Color(img.getRGB(j, i));
-				//pixel[i][j] = img.getRGB(j, i);
-				/*pixel[i][j] = (thecolor.getRed() + thecolor.getBlue() + thecolor
-						.getGreen()) / 3;*/
-				pixel[i][j] = (int)(color.getGreen()*.7+color.getRed()*.2+color.getBlue()*.1);
+				pixel[i][j] = (color.getRed() + color.getBlue() + color
+						.getGreen()) / 3;
 			
 			}
 		}
@@ -50,7 +52,6 @@ public class Image {
 				if (oldPixel < 128){
 					newPixel=0;
 				}
-				//int newPixel = oldPixel/256;
 				pixel[i][j] = newPixel;
 				int error = oldPixel - newPixel;
 				if(i < pixel.length - 1)

@@ -25,14 +25,14 @@ public class LinesDrawingExample extends JFrame {
  
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-		Image soupCan = new Image("pear.png");
+		Image soupCan = new Image("can.jpeg");
 		int[][] dither = soupCan.dither();
 		TSP solver = new TSP(dither);
 		Stack<Point> path = solver.findShortestPath();
-		ArrayList<Point> newPath = solver.removeIntersects(path);
-		for(int i = newPath.size() - 1; i > 0; i--) {
-			Point point1 = newPath.get(i);
-			Point point2 = newPath.get(i-1);
+		//ArrayList<Point> newPath = solver.removeIntersects(path);
+		for(int i = path.size() - 1; i > 0; i--) {
+			Point point1 = path.get(i);
+			Point point2 = path.get(i-1);
 			g2d.draw(new Line2D.Double(point1.getX(), point1.getY(), point2.getX(), point2.getY()));
 		}
     }
