@@ -19,18 +19,7 @@ public class Image {
 	public Image(String filename) {
 		try {
 			BufferedImage orginalImage = ImageIO.read(new File(filename));
-			/*
-			 * BufferedImage blackAndWhiteImg = new BufferedImage(
-			 * orginalImage.getWidth(), orginalImage.getHeight(),
-			 * BufferedImage.TYPE_BYTE_GRAY);
-			 * 
-			 * Graphics2D graphics = blackAndWhiteImg.createGraphics();
-			 * graphics.drawImage(orginalImage, 0, 0, null);
-			 * 
-			 * ImageIO.write(blackAndWhiteImg, "png", new
-			 * File("blackandwhite.png")); img = ImageIO.read(new
-			 * File("blackandwhite.png"));
-			 */
+		
 			img = orginalImage;
 
 		} catch (IOException e) {

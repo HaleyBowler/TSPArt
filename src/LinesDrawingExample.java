@@ -1,4 +1,6 @@
+
 import java.awt.Color;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,6 +28,7 @@ public class LinesDrawingExample extends JFrame {
  
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+
 		Image soupCan = new Image("can.jpeg");
 		//int[][] dither = soupCan.dither();
 		soupCan.dither();
@@ -47,6 +50,7 @@ public class LinesDrawingExample extends JFrame {
 		while(!path.isEmpty()) {
 			newPath.add(path.pop());
 		}
+
 		for(int i = newPath.size() - 1; i > 0; i--) {
 			Point point1 = newPath.get(i);
 			Point point2 = newPath.get(i-1);
@@ -68,3 +72,4 @@ public class LinesDrawingExample extends JFrame {
         });
     }
 }
+

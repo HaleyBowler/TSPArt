@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -33,11 +34,22 @@ public class TSP {
 			
 			
 		}
-		/*while(!path.isEmpty()) {
-			System.out.println(path.pop());
-		}*/
+
 		return path;
 	}
+	public ArrayList<Point> switchDirection(int start, int end, 
+			ArrayList<Point> path) {
+		ArrayList<Point> tempList = new ArrayList<Point>();
+		for (int x = start + 1; x < end; x++) {
+			tempList.add(0, path.get(x));
+		}
+		for (int x = start + 1; x < end; x++) {
+			path.set(x, tempList.get(0));
+			tempList.remove(0);
+		}
+		return path;
+	}
+	
 	
 	
 }
