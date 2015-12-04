@@ -42,13 +42,16 @@ public class Image {
 
 	                int color = img.getRGB(i, j);
 
+	                
 	                int red = (color >>> 16) & 0xFF;
 	                int green = (color >>> 8) & 0xFF;
 	                int blue = (color >>> 0) & 0xFF;
 
+	               //calculate luminance in range 0.0 to 1.0; using SRGB luminance constants
 	                double lum = (red * 0.21f + green * 0.71f + blue * 0.07f) / 255;
 
 	                if (lum <= threshold[rn.nextInt(threshold.length)]) {
+	               // if (lum < 0.5f) {
 	                    imRes.setRGB(i, j, 0x000000);
 	                } else {
 	                    imRes.setRGB(i, j, 0xFFFFFF);
@@ -141,17 +144,14 @@ public class Image {
 	}
 
 	public int getHeight() {
-		// TODO Auto-generated method stub
 		return img.getHeight();
 	}
 
 	public int getWidth() {
-		// TODO Auto-generated method stub
 		return img.getWidth();
 	}
 
 	public int getRGB(int j, int i) {
-		// TODO Auto-generated method stub
 		return img.getRGB(j, i);
 	}
 	
