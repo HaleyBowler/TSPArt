@@ -1,3 +1,6 @@
+
+import java.awt.Color;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -25,14 +28,30 @@ public class LinesDrawingExample extends JFrame {
  
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+
 		Image soupCan = new Image("can.jpeg");
-		int[][] dither = soupCan.dither();
-		TSP solver = new TSP(dither);
+		soupCan.dither();
+		Image dithered = new Image("dithered.png");
+		int[][] pixel = new int[dithered.getWidth()][dithered.getHeight()];
+		for (int i = 0; i < dithered.getWidth(); i++) {
+			for (int j = 0; j < dithered.getHeight(); j++) {
+				Color color = new Color(dithered.getRGB(i, j));
+				pixel[i][j] = (int) (color.getGreen() * .7 + color.getRed()
+						* .2 + color.getBlue() * .1);
+				
+			}
+		}
+	      
+		TSP solver = new TSP(pixel);
 		Stack<Point> path = solver.findShortestPath();
-		//ArrayList<Point> newPath = solver.removeIntersects(path);
-		for(int i = path.size() - 1; i > 0; i--) {
-			Point point1 = path.get(i);
-			Point point2 = path.get(i-1);
+		ArrayList<Point> newPath = new ArrayList<Point>();
+		while(!path.isEmpty()) {
+			newPath.add(path.pop());
+		}
+
+		for(int i = newPath.size() - 1; i > 0; i--) {
+			Point point1 = newPath.get(i);
+			Point point2 = newPath.get(i-1);
 			g2d.draw(new Line2D.Double(point1.getX(), point1.getY(), point2.getX(), point2.getY()));
 		}
     }
@@ -51,3 +70,4 @@ public class LinesDrawingExample extends JFrame {
         });
     }
 }
+

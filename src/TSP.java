@@ -32,7 +32,9 @@ public class TSP {
 			path.push(blackPoints.get(shortestDist));
 			blackPoints.remove(shortestDist);
 			
+			
 		}
+
 		return path;
 	}
 	public ArrayList<Point> switchDirection(int start, int end, 
@@ -47,6 +49,6 @@ public class TSP {
 		}
 		return path;
 	}
-	
+
 	
 }
