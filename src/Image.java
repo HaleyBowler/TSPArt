@@ -10,6 +10,9 @@ import javax.imageio.ImageIO;
 public class Image {
 	public BufferedImage img;
 	
+
+
+	
 	private double[] threshold = { 0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.31,
             0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.4, 0.41, 0.42,
             0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53,
@@ -18,20 +21,35 @@ public class Image {
 
 	public Image(String filename) {
 		try {
-			BufferedImage orginalImage = ImageIO.read(new File(filename));
-		
-			img = orginalImage;
+			BufferedImage originalImage = ImageIO.read(new File(filename));
+			/*
+			int[][] simplify = new int[originalImage.getWidth()][originalImage.getHeight()];
+			for (int i = 0; i < originalImage.getWidth(); i++) {
+	            for (int j = 0; j < originalImage.getHeight(); j++) {
+	            	Color color = new Color(originalImage.getRGB(i, j));
+
+	            	int average = (int)((color.getRed() + color.getBlue() + color.getGreen()) / 3);
+
+	            	if(average < 128) {
+	            		simplify[i][j] = average / 2;
+	            	} else {
+	            		simplify[i][j] = average + ((255 - average)/2);
+	            	}
+	            }
+	        }
+		    img = new BufferedImage(simplify.length, simplify[0].length, BufferedImage.TYPE_INT_RGB);
+		    for (int x = 0; x < simplify.length; x++) {
+		        for (int y = 0; y < simplify[0].length; y++) {
+		            img.setRGB(x, y, simplify[x][y]);
+		        }
+		    }
+		    */
+			img = originalImage;
 
 		} catch (IOException e) {
 		}
 	}
-/*
-	static int scaleRange(int number, int oldMin, int oldMax, int newMin,
-			int newMax) {
-		return (number / ((oldMax - oldMin) / (newMax - newMin))) + newMin;
-	}*/
 
-	//public int[][] dither() {
 	public void dither(){
 		
 		 BufferedImage imRes = new BufferedImage(img.getWidth(),
@@ -46,10 +64,25 @@ public class Image {
 	                int red = (color >>> 16) & 0xFF;
 	                int green = (color >>> 8) & 0xFF;
 	                int blue = (color >>> 0) & 0xFF;
+	                if(red < 128) {
+	            		red = red / 2;
+	            	} else {
+	            		red = red + ((255 - red)/2);
+	            	}
+	                if(green < 128) {
+	            		green = green / 2;
+	            	} else {
+	            		green = green + ((255 - green)/2);
+	            	}
+	                if(blue < 128) {
+	            		blue = blue / 2;
+	            	} else {
+	            		blue = blue + ((255 - blue)/2);
+	            	}
 
 	               //calculate luminance in range 0.0 to 1.0; using SRGB luminance constants
 	                double lum = (red * 0.21f + green * 0.71f + blue * 0.07f) / 255;
-
+	                
 	                if (lum <= threshold[rn.nextInt(threshold.length)]) {
 	               // if (lum < 0.5f) {
 	                    imRes.setRGB(i, j, 0x000000);
@@ -65,55 +98,8 @@ public class Image {
 	            e.printStackTrace();
 	        }
 	        
-		/*
-		int[][] pixel = new int[img.getHeight()][img.getWidth()];
-		for (int i = 0; i < pixel.length; i++) {
-			for (int j = 0; j < pixel[i].length; j++) {
-				Color color = new Color(img.getRGB(j, i));
-				// pixel[i][j] = img.getRGB(j, i);
-				
-				 // pixel[i][j] = (thecolor.getRed() + thecolor.getBlue() +
-				 // thecolor .getGreen()) / 3;
-				 
-				pixel[i][j] = (int) (color.getGreen() * .7 + color.getRed()
-						* .2 + color.getBlue() * .1);
 
-			}
-		}
-		for (int i = 0; i < pixel.length; i++) {
-			for (int j = 0; j < pixel[i].length; j++) {
-				int oldPixel = pixel[i][j];
-				int newPixel = 255;
-				if (oldPixel < 128) {
-					newPixel = 0;
-				}
-				// int newPixel = oldPixel/256;
-				pixel[i][j] = newPixel;
-				int error = oldPixel - newPixel;
-				if (i < pixel.length - 1)
-					pixel[i + 1][j] = pixel[i + 1][j]
-							+ (int) (error * (7.0 / 16));
-				if (j < pixel[i].length - 1 && i > 1)
-					pixel[i - 1][j + 1] = pixel[i - 1][j + 1]
-							+ (int) (error * (3.0 / 16));
-				if (j < pixel[i].length - 1)
-					pixel[i][j + 1] = pixel[i][j + 1]
-							+ (int) (error * (5.0 / 16));
-				if (j < pixel[i].length - 1 && i < pixel.length - 1)
-					pixel[i + 1][j + 1] = pixel[i + 1][j + 1]
-							+ (int) (error * (1.0 / 16));
-			}
-		}
-		return pixel; */
 	}
-
-	/*
-	 * public static BufferedImage getImageFromArray(int[] pixels, int width,
-	 * int height){ BufferedImage image = new
-	 * BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB); WritableRaster
-	 * raster = (WritableRaster) image.getData(); raster.setPixels(0, 0, width,
-	 * height, pixels); return image; }
-	 */
 
 	public static void writeImage(String Name, int[][] color) {
 		String path = Name + ".png";
@@ -134,13 +120,7 @@ public class Image {
 	}
 
 	public static void main(String[] args) {
-	/*	int number = 240;
-		int retVal = scaleRange(number, 0, 255, 0, 9);
-		System.out.println(retVal);*/
 		
-		//Image d = new Image("flowers.jpeg");
-	        //d.readOriginal();
-	      //  d.dither();
 	}
 
 	public int getHeight() {

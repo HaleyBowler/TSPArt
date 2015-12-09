@@ -30,20 +30,18 @@ public class LinesDrawingExample extends JFrame {
         Graphics2D g2d = (Graphics2D) g;
 
 		Image soupCan = new Image("can.jpeg");
-		//int[][] dither = soupCan.dither();
 		soupCan.dither();
 		Image dithered = new Image("dithered.png");
-		int[][] pixel = new int[dithered.getHeight()][dithered.getWidth()];
-		for (int i = 0; i < pixel.length; i++) {
-			for (int j = 0; j < pixel[i].length; j++) {
-				//pixel[i][j]=dithered.getRGB(j, i);
-				Color color = new Color(dithered.getRGB(j, i));
+		int[][] pixel = new int[dithered.getWidth()][dithered.getHeight()];
+		for (int i = 0; i < dithered.getWidth(); i++) {
+			for (int j = 0; j < dithered.getHeight(); j++) {
+				Color color = new Color(dithered.getRGB(i, j));
 				pixel[i][j] = (int) (color.getGreen() * .7 + color.getRed()
 						* .2 + color.getBlue() * .1);
+				
 			}
 		}
-	        
-		//TSP solver = new TSP(dither);
+	      
 		TSP solver = new TSP(pixel);
 		Stack<Point> path = solver.findShortestPath();
 		ArrayList<Point> newPath = new ArrayList<Point>();

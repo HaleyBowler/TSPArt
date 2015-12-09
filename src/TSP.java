@@ -14,6 +14,7 @@ public class TSP {
 				}
 			}
 		}
+		//System.out.println(blackPoints.size());
 	}
 	public Stack<Point> findShortestPath() {
 		Stack<Point> path = new Stack<Point>();
@@ -49,7 +50,6 @@ public class TSP {
 		}
 		return path;
 	}
-	
-	
+
 	
 }
