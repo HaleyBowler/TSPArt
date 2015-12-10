@@ -19,7 +19,7 @@ public class TSP {
 		}
 		long seed = System.nanoTime();
 		Collections.shuffle(blackPoints, new Random(seed));
-		blackPoints.subList(2000, blackPoints.size() - 1).clear();
+		blackPoints.subList(4999, blackPoints.size() - 1).clear();
 	}
 
 	public Stack<Point> findShortestPath() {
@@ -59,7 +59,7 @@ public class TSP {
 					if(swapBetter(i, j, newPath)) {
 						int cnt = 0;
 						for(Point point : swap(i, j, newPath)) {
-							if (cnt < 2000)
+							if (cnt < 5000)
 								newPath.set(cnt, point);
 							cnt++;
 						}
@@ -81,6 +81,10 @@ public class TSP {
 		Point b = (i != 0) ? path.get(i - 1) : path.get(path.size() - 1);
 		Point c = path.get(j);
 		Point d = (j != path.size() - 1) ? path.get(j + 1) : path.get(0); 
+		
+		if(a.equals(b) || a.equals(d) || b.equals(c) || b.equals(d)) {
+			return false;
+		}
 		
 		double currDist1 = a.distance(b);
 		double currDist2 = c.distance(d);

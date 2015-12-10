@@ -29,7 +29,7 @@ public class LinesDrawingExample extends JFrame {
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-		Image soupCan = new Image("download.jpeg");
+		Image soupCan = new Image("can.jpeg");
 		soupCan.dither();
 		Image dithered = new Image("dithered.png");
 		int[][] pixel = new int[dithered.getWidth()][dithered.getHeight()];
@@ -48,6 +48,7 @@ public class LinesDrawingExample extends JFrame {
 		while(!path.isEmpty()) {
 			newPath.add(path.pop());
 		}
+		newPath.add(newPath.get(0));
 		ArrayList<Point> finalPath = solver.removeIntersections(newPath);
 		/*
 		for(Point point : newPath) {
