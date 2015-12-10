@@ -1,17 +1,17 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class Image {
 	public BufferedImage img;
-	
-
-
 	
 	private double[] threshold = { 0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.31,
             0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.4, 0.41, 0.42,
@@ -22,34 +22,36 @@ public class Image {
 	public Image(String filename) {
 		try {
 			BufferedImage originalImage = ImageIO.read(new File(filename));
-			/*
-			int[][] simplify = new int[originalImage.getWidth()][originalImage.getHeight()];
-			for (int i = 0; i < originalImage.getWidth(); i++) {
-	            for (int j = 0; j < originalImage.getHeight(); j++) {
-	            	Color color = new Color(originalImage.getRGB(i, j));
-
-	            	int average = (int)((color.getRed() + color.getBlue() + color.getGreen()) / 3);
-
-	            	if(average < 128) {
-	            		simplify[i][j] = average / 2;
-	            	} else {
-	            		simplify[i][j] = average + ((255 - average)/2);
-	            	}
-	            }
-	        }
-		    img = new BufferedImage(simplify.length, simplify[0].length, BufferedImage.TYPE_INT_RGB);
-		    for (int x = 0; x < simplify.length; x++) {
-		        for (int y = 0; y < simplify[0].length; y++) {
-		            img.setRGB(x, y, simplify[x][y]);
-		        }
-		    }
-		    */
-			img = originalImage;
+			int newHeight=0, newWidth=0;
+			if (originalImage.getHeight()>100){
+				newHeight=400;
+			}
+			if (originalImage.getWidth()>100){
+				newWidth=400;
+			}
+			if (originalImage.getHeight()>100 || originalImage.getWidth()>100){
+			
+			BufferedImage resized = new BufferedImage(newWidth, newHeight, originalImage.getType());
+			Graphics2D g = resized.createGraphics();
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+			    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.drawImage(originalImage, 0, 0, newWidth, newHeight, 0, 0, originalImage.getWidth(),
+			    originalImage.getHeight(), null);
+			g.dispose();
+			img=resized;
+			} else {
+				img=originalImage;
+			}
 
 		} catch (IOException e) {
+			
 		}
 	}
 
+	/*
+	 * Random dithering using threshhold matrix
+	 * Basic Idea: https://en.wikipedia.org/wiki/Ordered_dithering
+	 */
 	public void dither(){
 		
 		 BufferedImage imRes = new BufferedImage(img.getWidth(),
@@ -60,9 +62,13 @@ public class Image {
 
 	                int color = img.getRGB(i, j);
 
+	                //Convert to grayscale
+	                //http://stackoverflow.com/questions/9131678/convert-a-rgb-image-to-grayscale-image-reducing-the-memory-in-java
 	                int red = (color >>> 16) & 0xFF;
 	                int green = (color >>> 8) & 0xFF;
 	                int blue = (color >>> 0) & 0xFF;
+	                
+	                //Make dark points darker and light points lighter to simplify
 	                if(red < 128) {
 	            		red = red / 2;
 	            	} else {
@@ -79,8 +85,11 @@ public class Image {
 	            		blue = blue + ((255 - blue)/2);
 	            	}
 
+	                //Calculate luminance in range 0.0 to 1.0; using SRGB luminance constants
+	                //http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
 	                double lum = (red * 0.21f + green * 0.71f + blue * 0.07f) / 255;
 	                
+	                //Check against random point in threshold matrix to determine if point is black or white
 	                if (lum <= threshold[rn.nextInt(threshold.length)]) {
 	                    imRes.setRGB(i, j, 0x000000);
 	                } else {
