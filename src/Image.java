@@ -1,17 +1,17 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class Image {
 	public BufferedImage img;
-	
-
-
 	
 	private double[] threshold = { 0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.31,
             0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.4, 0.41, 0.42,
@@ -22,6 +22,27 @@ public class Image {
 	public Image(String filename) {
 		try {
 			BufferedImage originalImage = ImageIO.read(new File(filename));
+			int newHeight=0, newWidth=0;
+			if (originalImage.getHeight()>100){
+				newHeight=400;
+			}
+			if (originalImage.getWidth()>100){
+				newWidth=400;
+			}
+			if (originalImage.getHeight()>100 || originalImage.getWidth()>100){
+			
+			BufferedImage resized = new BufferedImage(newWidth, newHeight, originalImage.getType());
+			Graphics2D g = resized.createGraphics();
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+			    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.drawImage(originalImage, 0, 0, newWidth, newHeight, 0, 0, originalImage.getWidth(),
+			    originalImage.getHeight(), null);
+			g.dispose();
+			img=resized;
+			} else {
+				img=originalImage;
+			}
+			
 			/*
 			int[][] simplify = new int[originalImage.getWidth()][originalImage.getHeight()];
 			for (int i = 0; i < originalImage.getWidth(); i++) {
@@ -44,12 +65,14 @@ public class Image {
 		        }
 		    }
 		    */
-			img = originalImage;
+		//	img = originalImage;
 
 		} catch (IOException e) {
+			
 		}
 	}
 
+	
 	public void dither(){
 		
 		 BufferedImage imRes = new BufferedImage(img.getWidth(),
