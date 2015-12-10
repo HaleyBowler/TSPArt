@@ -17,11 +17,9 @@ public class TSP {
 				}
 			}
 		}
-
 		long seed = System.nanoTime();
 		Collections.shuffle(blackPoints, new Random(seed));
-		blackPoints.subList(100, blackPoints.size() - 1).clear();
-
+		blackPoints.subList(2000, blackPoints.size() - 1).clear();
 	}
 
 	public Stack<Point> findShortestPath() {
@@ -56,16 +54,14 @@ public class TSP {
 		while (!swapped) {
 			boolean swapped2 = false;
 			for(int i = 0; i < pathSize; i++) {
-				for(int j = 0; j < pathSize; j++) {
+				for(int j = i + 1; j < pathSize; j++) {
 					if(i != j) {
 					if(swapBetter(i, j, newPath)) {
 						int cnt = 0;
 						for(Point point : swap(i, j, newPath)) {
-							if (cnt < 100) {
+							if (cnt < 2000)
 								newPath.set(cnt, point);
-								System.out.println(swapped);
 							cnt++;
-							}
 						}
 						swapped2 = true;
 					}
@@ -92,29 +88,26 @@ public class TSP {
 		double newDist1 = b.distance(c);
 		double newDist2 = a.distance(d);
 		
-		/*if(Line2D.linesIntersect(a.getX(), a.getY(), b.getX(), b.getY(), c.getX(), c.getY(), d.getX(), d.getY())) {
+		/* if(Line2D.linesIntersect(a.getX(), a.getY(), b.getX(), b.getY(), c.getX(), c.getY(), d.getX(), d.getY())) {
 			return true;
-		}*/
-		
+		} */
 		
 		if(currDist1 + currDist2 > newDist1 + newDist2) {
 			//System.out.println("Swapped");
 			return true;
 		}	
-		
 		return false;
 	}
 
 	private ArrayList<Point> swap(int i, int j, ArrayList<Point> path) {
 		ArrayList<Point> newPath = new ArrayList<Point>();
-		
 		for(int k = 0; k < i; k++) {
 			newPath.add(path.get(k));
 		}
 		for(int k = j; k >= i; k--) {
 			newPath.add(path.get(k));
 		}
-		for(int k = j + 1; k < path.size(); k++) {
+		for(int k = j + 1; k < path.size() - 1; k++) {
 			newPath.add(path.get(k));
 		}
 		
@@ -124,22 +117,17 @@ public class TSP {
 /*
 	public ArrayList<Point> removeIntersections(ArrayList<Point> p) {
 		ArrayList<Point> path = p;
-
 		// Get path size
 		int pathSize = path.size();
-
 		// Get path length
 		// int dist = findDist(path);
-
 		// repeat until no improvements are made
 		double minchange = -1;
-
 		while (minchange < 0) {
 			minchange = 0;
 			for (int i = 1; i < pathSize - 1; i++) {
 				for (int j = 1; j < pathSize - 1; j++) {
 					if (i != j) {
-
 						double change = path.get(i).distance(path.get(j)) + path.get(i + 1).distance(path.get(j + 1))
 								- path.get(i).distance(path.get(i + 1)) - path.get(j).distance(path.get(j + 1));
 						if (minchange > change) {
@@ -152,7 +140,6 @@ public class TSP {
 		}
 		return path;
 	}
-
 	public ArrayList<Point> swap(ArrayList<Point> path, int i, int j) {
 		ArrayList<Point> newPath = new ArrayList<Point>();
 		if(i < j) {
@@ -178,7 +165,6 @@ public class TSP {
 		}
 		return newPath; 
 	}
-
 }
 */
 /*
@@ -236,7 +222,6 @@ public class TSP {
 		}
 		return newPath; 
 	}
-
 	private int calculateDistance(ArrayList<Point> path) {
 		int dist = 0;
 		for(int i = 0; i < path.size() - 1; i++) {
