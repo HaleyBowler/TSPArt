@@ -68,7 +68,7 @@ public class TSP {
 					}
 				}
 			}
-			swapped = swapped2; 
+			swapped = !swapped2; 
 		}
 		return newPath; 
 	}
